@@ -1092,10 +1092,11 @@ def generate_class_progress_report(students, marks, attendance, assignments, gra
     class_students = [student for student in students if student['Grade'] == grade and student['Section'] == section]
 
     if report_options == 'details':
+        sno = 1
         student_details_data = []
         for student in class_students:
             student_details_data.append({
-                'Sno': student.get('Sno', 'N/A'),
+                'Sno': str(sno),
                 'Name': student.get('Name', 'N/A'),
                 'Age': str(student.get('Age', 'N/A')),
                 'Roll No': student.get('Roll No', 'N/A'),
@@ -1105,11 +1106,13 @@ def generate_class_progress_report(students, marks, attendance, assignments, gra
                 'Grade': student.get('Grade', 'N/A'),
                 'Section': student.get('Section', 'N/A')
             })
+            sno += 1
 
         student_details_df = pd.DataFrame(student_details_data)
         student_details_df.to_excel(writer, sheet_name="Student_Details", index=False)
 
     if report_options == 'marks':
+        sno = 1
         marks_data = []
         for student in class_students:
             if term.lower() == 'all' or term == '':
@@ -1125,7 +1128,7 @@ def generate_class_progress_report(students, marks, attendance, assignments, gra
 
             for mark in student_marks:
                 marks_data.append({
-                    'Sno': student.get('Sno', 'N/A'),
+                    'Sno': str(sno),
                     'Name': student.get('Name', 'N/A'),
                     'Roll No': student.get('Roll No', 'N/A'),
                     'GR No': student.get('GR No', 'N/A'),
@@ -1135,11 +1138,13 @@ def generate_class_progress_report(students, marks, attendance, assignments, gra
                     'Total Marks': mark.get('Total Marks', 'N/A'),
                     'Percentage': mark.get('Percentage', 'N/A')
                 })
+                sno += 1
 
         marks_df = pd.DataFrame(marks_data)
         marks_df.to_excel(writer, sheet_name="Marks", index=False)
 
     if report_options == 'attendance':
+        sno = 1
         attendance_data = []
         for student in class_students:
             if date_option == 'all':
@@ -1149,18 +1154,20 @@ def generate_class_progress_report(students, marks, attendance, assignments, gra
 
             for att in student_attendance:
                 attendance_data.append({
-                    'Sno': student.get('Sno', 'N/A'),
+                    'Sno': str(sno),
                     'Name': student.get('Name', 'N/A'),
                     'Roll No': student.get('Roll No', 'N/A'),
                     'GR No': student.get('GR No', 'N/A'),
                     'Date': att.get('Date', 'N/A'),
                     'Status': att.get('Status', 'N/A')
                 })
+                sno += 1
 
         attendance_df = pd.DataFrame(attendance_data)
         attendance_df.to_excel(writer, sheet_name="Attendance", index=False)
 
     if report_options == 'assignments':
+        sno = 1
         assignments_data = []
         for student in class_students:
             if subject.lower() == 'all' or subject == '':
@@ -1176,7 +1183,7 @@ def generate_class_progress_report(students, marks, attendance, assignments, gra
 
             for assignment in student_assignments:
                 assignments_data.append({
-                    'Sno': student.get('Sno', 'N/A'),
+                    'Sno': str(sno),
                     'Name': student.get('Name', 'N/A'),
                     'Roll No': student.get('Roll No', 'N/A'),
                     'GR No': student.get('GR No', 'N/A'),
@@ -1186,6 +1193,7 @@ def generate_class_progress_report(students, marks, attendance, assignments, gra
                     'Submission Date': assignment.get('Submission Date', 'N/A'),
                     'Late Submission': assignment.get('Late Submission', 'N/A')
                 })
+                sno += 1
 
         assignments_df = pd.DataFrame(assignments_data)
         assignments_df.to_excel(writer, sheet_name="Assignments", index=False)
@@ -1229,7 +1237,7 @@ def generate_student_progress_report(students, marks, attendance, assignments, g
 
     if report_options == 'details':
         student_details_data = [{
-            'Sno': student.get('Sno', 'N/A'),
+            'Sno': "1",
             'Name': student.get('Name', 'N/A'),
             'Age': str(student.get('Age', 'N/A')),
             'Roll No': student.get('Roll No', 'N/A'),
@@ -1256,7 +1264,7 @@ def generate_student_progress_report(students, marks, attendance, assignments, g
                 student_marks = [mark for mark in marks if mark['GR No'] == student['GR No'] and mark['Term'] == term and mark['Subject'] == subject]
 
         marks_data = [{
-            'Sno': student.get('Sno', 'N/A'),
+            'Sno': str(1 + idx),
             'Name': student.get('Name', 'N/A'),
             'Roll No': student.get('Roll No', 'N/A'),
             'GR No': student.get('GR No', 'N/A'),
@@ -1265,7 +1273,7 @@ def generate_student_progress_report(students, marks, attendance, assignments, g
             'Marks Obtained': mark.get('Marks Obtained', 'N/A'),
             'Total Marks': mark.get('Total Marks', 'N/A'),
             'Percentage': mark.get('Percentage', 'N/A')
-        } for mark in student_marks]
+        } for idx, mark in enumerate(student_marks)]
 
         marks_df = pd.DataFrame(marks_data)
         marks_df.to_excel(writer, sheet_name="Marks", index=False)
@@ -1277,13 +1285,13 @@ def generate_student_progress_report(students, marks, attendance, assignments, g
             student_attendance = [att for att in attendance if att['GR No'] == student['GR No'] and att['Date'] == date_option]
 
         attendance_data = [{
-            'Sno': student.get('Sno', 'N/A'),
+            'Sno': str(1 + idx),
             'Name': student.get('Name', 'N/A'),
             'Roll No': student.get('Roll No', 'N/A'),
             'GR No': student.get('GR No', 'N/A'),
             'Date': att.get('Date', 'N/A'),
             'Status': att.get('Status', 'N/A')
-        } for att in student_attendance]
+        } for idx, att in enumerate(student_attendance)]
 
         attendance_df = pd.DataFrame(attendance_data)
         attendance_df.to_excel(writer, sheet_name="Attendance", index=False)
@@ -1301,7 +1309,7 @@ def generate_student_progress_report(students, marks, attendance, assignments, g
                 student_assignments = [assignment for assignment in assignments if assignment['GR No'] == student['GR No'] and assignment['Subject'].upper() == subject and assignment['Assignment Name'].upper() == assignment_name]
 
         assignments_data = [{
-            'Sno': student.get('Sno', 'N/A'),
+            'Sno': str(1 + idx),
             'Name': student.get('Name', 'N/A'),
             'Roll No': student.get('Roll No', 'N/A'),
             'GR No': student.get('GR No', 'N/A'),
@@ -1310,7 +1318,7 @@ def generate_student_progress_report(students, marks, attendance, assignments, g
             'Status': assignment.get('Status', 'N/A'),
             'Submission Date': assignment.get('Submission Date', 'N/A'),
             'Late Submission': assignment.get('Late Submission', 'N/A')
-        } for assignment in student_assignments]
+        } for idx, assignment in enumerate(student_assignments)]
 
         assignments_df = pd.DataFrame(assignments_data)
         assignments_df.to_excel(writer, sheet_name="Assignments", index=False)
@@ -1681,7 +1689,10 @@ def display_main_menu(role):
 
         choice = input("Enter your choice: ").strip()
         if choice in options:
-            options[choice][1]()
+            if options[choice][1] == generate_progress_report:
+                options[choice][1](students, marks, attendance, assignments)
+            else:
+                options[choice][1]()
         else:
             print("Invalid choice. Please try again.")
 
